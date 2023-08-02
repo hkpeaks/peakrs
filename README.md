@@ -1,7 +1,7 @@
 # PyPeaks Is Under Construction
 PyPeaks is an ETL Framework using Arrow compatible Python libraries e.g. Pandas, Polars, DuckDB as Calc Engines
 
-## Development of New SQL Statement for File, In-memory Table and Network Stream
+## New SQL Statement for File, In-memory Table and Network Stream
 
 Note: Use of "|" to indicate it is member of your defined function is optional. 
 However use of  "~" is mandatory to identify first line is "UserDefineFunctionName: Extraction ~ Load".
