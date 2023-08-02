@@ -56,3 +56,52 @@ However use of  "~" is mandatory to identify first line is "UserDefineFunctionNa
 
 | View
 
+
+## Command List
+
+   AddColumn{Column, Column => Math(NewColName)} 
+   
+        where Math includes Add, Subtract, Multiply & Divide
+    
+   BuildKeyValue{Column, Column ~ KeyValueTableName}
+   
+   CurrentSetting{StreamMB(Number) Thread(Number)}
+  
+   Distinct{Column, Column}
+ 
+   Filter{Column(CompareOperator Value) Column(CompareOperator Value)}
+ 
+   FilterUnmatch{Column(CompareOperator Value) Column(CompareOperator Value)}
+
+        where Compare operator includes >,<,>=,<=,=,!= & Range e.g. 100..200
+              Compare integer or float e.g. Float > Number, Float100..200
+   
+   GroupBy{Column, Column => Count() Sum(Column) Max(Column) Min(Column)}
+   
+   JoinKeyValue{Column, Column => JoinType(KeyValueTableName)} 
+        
+        where JoinType includes AllMatch, Filter & FilterUnmatch
+   
+   JoinTable{Column, Column => JoinType(KeyValueTableName) Math(NewColName)}
+
+        where JoinType includes AllMatch & InnerJoin
+   
+   OrderBy{PrimaryCol(Sorting Order) SecondaryCol(Sorting Order)}       
+  
+   OrderBy{SecondaryCol(Sorting Order) => CreateFolderLake(PrimaryCol) ~ FolderName or FileName.csv}
+
+        where Sorting Order represents by A or D, to sort real numbers, use either FloatA or FloatD
+   
+   ReadSample{StartPosition%(Number) ByteLength(Number)}
+   
+   ReadSample{Repeat(Number) ByteLength(Number)}   
+   
+   Select{Column, Column}
+   
+   SelectUnmatch{Column, Column}
+   
+   SplitFile{FileName.csv ~ NumberOfSplit}
+   
+   CreateFolderLake{Column, Column ~ SplitFolderName}
+   
+   View{TableName}
