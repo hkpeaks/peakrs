@@ -1,7 +1,5 @@
 # PyPeaks Is Under Construction
-PyPeaks is an ETL Framework using Arrow compatible Python libraries e.g. Pandas, Polars, DuckDB as Calc Engines.
-First Python currently buiding is "isCSV.py". This is help to validate whether a file is CSV and to determine the delimiter.
-Using below SQL statement, this function will help to feed proper setting to your Python libraries propertly.
+PyPeaks is a framework for extracting, transforming and loading (ETL) data using Python libraries that are compatible with Arrow, such as Pandas, Polars and DuckDB. These libraries can act as calculation engines for data analysis. One of the functions that PyPeaks is developing is “isCSV.py”, which can check if a file is a valid comma-separated values (CSV) file and identify its delimiter. This function can help to configure the Python libraries correctly by using the following SQL statement:
 
 ## New SQL Statement for File, In-memory Table and Network Stream
 
