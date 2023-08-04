@@ -4,7 +4,7 @@ import sys
 
 """ My name is Max Yu and I am a C#/Go programmer. I reconnencted
     my hobby in programming after discontinued for 28-year upon 
-    my retirement on Apr 1, 2020 to due to COVID-19.
+    my retirement on Apr 1, 2020 due to COVID-19.
 
     On August 4, 2023, I created my first Python app. This app is
     used to validate and preview CSV files. For every 1% position
