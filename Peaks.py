@@ -750,7 +750,7 @@ if len(sys.argv) == 1:
 elif len(sys.argv) == 2:
     file_path = sys.argv[1]
 
-csv_info, validate_byte, err = get_csv_info(file_path, 1000)
+csv_info, validate_byte, err = get_csv_info(file_path, 100)
 view(validate_byte, csv_info)
 write_csv_sample_file(validate_byte, csv_info)
 
