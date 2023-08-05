@@ -17,9 +17,10 @@ The app will gradually expand to become an ETL Framework for Polars (and/or Pand
 ## New SQL Statement for File, In-memory Table and Network Stream
 
 Note: Use of "." to indicate it is member of your defined function is optional. 
-However use of  "~" is mandatory to identify first line is "UserDefineFunctionName: Extraction ~ Load".
+However use of  "~" is mandatory to identify first line is "UserDefineFunctionName = Extraction ~ Load".
+If you are using Python, you can get return value from the "UserDefineFunctionName".
 
-#### UserDefineFunctionName = Extraction ~ Load
+#### UserDefineFunctionName : Extraction ~ Load
 
 . Transformation
 
