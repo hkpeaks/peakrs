@@ -19,19 +19,19 @@ The app will gradually expand to become an ETL Framework for Polars (and/or Pand
 Note: Use of "." to indicate it is member of your defined function is optional. 
 However use of  "~" is mandatory to identify first line is "UserDefineFunctionName: Extraction ~ Load".
 
-#### UserDefineFunctionName: Extraction ~ Load
+#### UserDefineFunctionName = Extraction ~ Load
 
 . Transformation
 
-#### UserDefineFunctionName: SourceFile/Table ~ ResultFile/Table
+#### UserDefineFunctionName = SourceFile/Table ~ ResultFile/Table
 
 . Command: Setting
 
-#### ExpandFile: Fact.csv ~ 1BillionRows.csv
+#### ExpandFile = Fact.csv ~ 1BillionRows.csv
 
 .ExpandFactor: 123
 
-#### JoinScenario1: 1BillionRows.csv ~ Test1Results.csv
+#### JoinScenario1 = 1BillionRows.csv ~ Test1Results.csv
 
 .JoinTable: Quantity, Unit_Price => InnerJoin(Master)Multiply(Amount)
 
@@ -39,11 +39,11 @@ However use of  "~" is mandatory to identify first line is "UserDefineFunctionNa
 
 .Select: Date,Shop,Style,Product,Quantity,Amount
 
-#### BuildKeyValueTable: Master.csv ~ KeyValueTable
+#### BuildKeyValueTable = Master.csv ~ KeyValueTable
 
 .BuildKeyValue: Product, Style
 
-#### JoinScenario2: 1BillionRows.csv ~ Test2AResults.csv
+#### JoinScenario2 = 1BillionRows.csv ~ Test2AResults.csv
 
 .JoinKeyValue: Product, Style => AllMatch(KeyValueTable)
 
@@ -55,15 +55,15 @@ However use of  "~" is mandatory to identify first line is "UserDefineFunctionNa
 
 .OrderBy: Shop(A)Product(A)Date(D)
 
-#### SplitFile: Test1Results.csv ~ FolderLake
+#### SplitFile = Test1Results.csv ~ FolderLake
 
 .CreateFolderLake: Shop
 
-#### FilterFolder: Outbox/FolderLake/S15/*.csv ~ Result-FilterFolderLake.csv
+#### FilterFolder = Outbox/FolderLake/S15/*.csv ~ Result-FilterFolderLake.csv
 
 .Filter: Product(222..888) Style(=F)
 
-#### ReadSample2View: Outbox/Result-FilterFolderLake.csv ~ SampleTable
+#### ReadSample2View = Outbox/Result-FilterFolderLake.csv ~ SampleTable
 
 .ReadSample: StartPosition%(0) ByteLength(100000)
 
