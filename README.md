@@ -17,7 +17,7 @@ The app will gradually expand to become an ETL Framework for Polars (and/or Pand
 ## New Query Statement for File, In-memory Table and Network Stream
 
 Note: Use of "." to indicate it is member of your defined function is optional. 
-First line is "UserDefineFunctionName = Extraction to Load".
+First line is to define data extraction and data load. Below are 3 possible scenarios:-
 
 UserDefineFunctionName = from Extraction to Load
 Or 
