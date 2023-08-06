@@ -1,12 +1,10 @@
 from typing import List, Tuple
 import os
 import sys
+import polars as pl
+from io import BytesIO
 
-""" My name is Max Yu and I am a C#/Go programmer. I reconnencted
-    my hobby in programming after discontinued for 28-year upon 
-    my retirement on Apr 1, 2020 due to COVID-19.
-
-    On August 4, 2023, I created my first Python app. This app is
+""" On August 4, 2023, I created my first Python app. This app is
     used to validate and preview CSV files. For every 1% position
     of a CSV file, it will extract one row for validation and 
     preview. On the screen, it will display 20 rows but will 
@@ -52,8 +50,11 @@ import sys
     datasets more efficiently. 
 
     csv_info, validate_byte, err = get_csv_info(file_path, 100)    
+
+    To see demo please refer to https://youtu.be/71GHzDnEYno
     
     """
+
 
 
 
@@ -69,6 +70,7 @@ class CSV_Info:
         self.delimiter: bytes = b''
 
 def get_byte_array_frequency_distribution(byte_array: bytes) -> dict:
+    
     frequency_distribution = {}
     for item in byte_array:
         if item in frequency_distribution:
@@ -78,11 +80,12 @@ def get_byte_array_frequency_distribution(byte_array: bytes) -> dict:
     return frequency_distribution
 
 def get_current_row_frequency_distribution(filepath: str, file, start_byte: int):
+    
     frequency_distribution = {}
     is_valid_row_exist = False
     sample_size = 0
     double_quote_count = 0
-    current_row = []
+    current_row = []   
 
     while not is_valid_row_exist and sample_size < 100000:
         sample_size += 100       
@@ -95,9 +98,14 @@ def get_current_row_frequency_distribution(filepath: str, file, start_byte: int)
         is_first_line_break_exist = False
         is_second_line_break_exist = False
 
+        if start_byte == 0:            
+            is_first_line_break_exist = True
+
         while n < sample_size and not is_second_line_break_exist:
+
             if not is_first_line_break_exist and byte_array[n] == 10:
                 is_first_line_break_exist = True
+
             elif is_first_line_break_exist and byte_array[n] == 10:
                 is_second_line_break_exist = True
 
@@ -114,11 +122,12 @@ def get_current_row_frequency_distribution(filepath: str, file, start_byte: int)
 
         if is_second_line_break_exist and len(current_row) > 0:
             frequency_distribution = get_byte_array_frequency_distribution(current_row)
-            is_valid_row_exist = True
-
+            is_valid_row_exist = True  
+   
     return len(current_row), frequency_distribution, current_row
 
 def skip_white_space(byte_array: bytes, start_byte: int, end_byte: int) -> Tuple[int, int]:
+   
     while start_byte < end_byte and byte_array[start_byte] == 32:
         start_byte += 1
 
@@ -128,9 +137,10 @@ def skip_white_space(byte_array: bytes, start_byte: int, end_byte: int) -> Tuple
     return start_byte, end_byte
 
 def get_column_name(filepath: str, file, delimiter: bytes) -> List[str]:
+   
     isValidRowExist = False
-    sample_size = 0
-    ## column_name = []
+    sample_size = 0   
+    
     _delimiter = int.from_bytes(delimiter, byteorder='big', signed=False)
 
     while not isValidRowExist:
@@ -176,7 +186,11 @@ def get_column_name(filepath: str, file, delimiter: bytes) -> List[str]:
    
     return column_name
 
+def int_to_byte(n: int) -> bytes:
+    return n.to_bytes((n.bit_length() + 7) // 8, 'big')
+
 def get_csv_info(filepath: str, sample_row: int) -> Tuple[CSV_Info, bytes, Exception]:
+    
     error_message = ''
     csv_info = CSV_Info()
 
@@ -203,27 +217,27 @@ def get_csv_info(filepath: str, sample_row: int) -> Tuple[CSV_Info, bytes, Excep
         if csv_info.file_size < 1000 or sample_row < 2:
             sample_row = 2
 
+        ## Column Name
+        current_row_byte_count, frequency_distribution, current_row_byte = get_current_row_frequency_distribution(filepath, file, 0)                   
+        delimiter_scenario = frequency_distribution 
+
+        ## Data Row
         while n <= sample_row - 1:
-            current_row_byte_count, frequency_distribution, current_row_byte = get_current_row_frequency_distribution(filepath, file, start_byte)                   
-            
+            start_byte += 1
+            current_row_byte_count, frequency_distribution, current_row_byte = get_current_row_frequency_distribution(filepath, file, start_byte)                               
             validate_byte.extend(current_row_byte)
             sample_byte_count += current_row_byte_count             
             frequency_distribution_by_sample[n] = frequency_distribution
             temp_delimiter_scenario = {}
 
             if n > 0:
-                for key in frequency_distribution.keys():
-                    if n == 1:
-                        if key in frequency_distribution_by_sample[n - 1]:
-                            if frequency_distribution_by_sample[n][key] == frequency_distribution_by_sample[n - 1][key]:
-                                delimiter_scenario[key] = frequency_distribution_by_sample[n][key]
-                    elif n > 1:
-                        for key2 in delimiter_scenario.keys():
-                            if key2 in frequency_distribution_by_sample[n]:
-                                if frequency_distribution_by_sample[n][key2] == delimiter_scenario[key2]:
-                                    temp_delimiter_scenario[key2] = delimiter_scenario[key2]
 
-                        delimiter_scenario = temp_delimiter_scenario
+                for key in delimiter_scenario:
+                    if key in frequency_distribution_by_sample[n]:
+                        if frequency_distribution_by_sample[n][key] == delimiter_scenario[key]:
+                            temp_delimiter_scenario[key] = delimiter_scenario[key]
+
+                delimiter_scenario = temp_delimiter_scenario
 
             start_byte = csv_info.file_size * n // sample_row
             n += 1
@@ -245,11 +259,19 @@ def get_csv_info(filepath: str, sample_row: int) -> Tuple[CSV_Info, bytes, Excep
             elif key == 13:
                 csv_info.is_line_br_13_exist = True
 
-    delimiter_exclude_abc123 = {}
+    delimiter_exclude_abc123 = {}    
 
     if 44 in delimiter_exclude_line_br:
         csv_info.delimiter = b','
         csv_info.total_column = delimiter_exclude_line_br[44] + 1
+
+    elif len(delimiter_exclude_line_br) == 1:
+        
+        for key in delimiter_exclude_line_br:
+            if (0 <= key <= 47) or (58 <= key <= 64) or (91 <= key <= 96) or (key >= 123):
+                csv_info.delimiter = int_to_byte(key)
+                csv_info.total_column = delimiter_exclude_line_br[key] + 1
+
     elif len(delimiter_exclude_line_br) > 1:
         for key in delimiter_exclude_line_br.keys():
             if (key >= 0 and key <= 47) or (key >= 58 and key <= 64) or (key >= 91 and key <= 96) or (key >= 123):
@@ -257,7 +279,9 @@ def get_csv_info(filepath: str, sample_row: int) -> Tuple[CSV_Info, bytes, Excep
 
     if len(delimiter_exclude_abc123) == 1:
         for key in delimiter_exclude_abc123.keys():
-            print(f'delimiter {chr(key)}')
+            csv_info.delimiter = int_to_byte(key)
+            csv_info.total_column = delimiter_exclude_line_br[key] + 1
+
     elif len(delimiter_exclude_abc123) > 1:
         error_message += '** More than one possible delimiter ** \n'
         for key in delimiter_exclude_abc123.keys():
@@ -294,6 +318,7 @@ def get_csv_info(filepath: str, sample_row: int) -> Tuple[CSV_Info, bytes, Excep
     return csv_info, validate_byte, None
 
 def number_display_format(num: float) -> str:
+    
     num_str = f'{num:.16g}'
     parts = num_str.split('.')
     num_of_digits = len(parts[0])
@@ -544,6 +569,7 @@ def current_view(byte_array: bytearray, csv_info: CSV_Info, start_column: int, e
     print(result_bytes.decode())
 
 def max_column_width(byte_array: bytearray, csv_info):
+    
     _cell_address = cell_address(byte_array, csv_info)
 
     is_zero_row = len(byte_array) == 0
@@ -751,12 +777,15 @@ elif len(sys.argv) == 2:
     file_path = sys.argv[1]
 
 csv_info, validate_byte, err = get_csv_info(file_path, 100)
-view(validate_byte, csv_info)
-write_csv_sample_file(validate_byte, csv_info)
 
 if err:
+    print()
     print(err)
 else:
+
+    view(validate_byte, csv_info)
+    write_csv_sample_file(validate_byte, csv_info)
+
     print("File Size: " + number_display_format(float(csv_info.file_size)) + " bytes", end =" ")
     print("  Total Column: ", number_display_format(float(csv_info.total_column)))
     print("Validated Row: ", number_display_format(float(csv_info.validate_row)), end =" ")
@@ -776,3 +805,5 @@ else:
         print("Delimiter: " + number_display_format(int.from_bytes(csv_info.delimiter, byteorder='big', signed=False)) + " [" + str(csv_info.delimiter) + "]")
 
     print("Is Line Br 10/13 Exist: ", csv_info.is_line_br_10_exist, "/", csv_info.is_line_br_13_exist)
+
+
