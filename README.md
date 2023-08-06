@@ -18,21 +18,14 @@ The app will gradually expand to become an ETL Framework for Polars (and/or Pand
 
 Note: Use of "." to indicate it is member of your defined function is optional. 
 First line is "UserDefineFunctionName = Extraction to Load".
-You can define query/ data transformation function from second line and after.
 
-#### UserDefineFunctionName = from Extraction to Load
+UserDefineFunctionName = from Extraction to Load
 Or 
-#### UserDefineFunctionName = from Extraction, Extraction, Extraction to Load
+UserDefineFunctionName = from Extraction, Extraction, Extraction to Load
 Or
-#### UserDefineFunctionName = from Extraction to Load, Load, Load
+UserDefineFunctionName = from Extraction to Load, Load, Load
 
-.Query/Transformation
-
-.Query/Transformation
-
-.Query/Transformation
-
-.Query/Transformation
+You can define query/ data transformation function from second line and after.
 
 Examples:
 
