@@ -89,7 +89,7 @@ Examples:
         
         where JoinType includes AllMatch, Filter & FilterUnmatch
    
-   JoinTable{Column, Column => JoinType(KeyValueTableName) Math(NewColName)}
+   JoinTable{Column, Column => JoinType(KeyValueTableName)}
 
         where JoinType includes AllMatch & InnerJoin
    
