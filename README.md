@@ -33,10 +33,12 @@ You can define query/ data transformation function from second line and after.
 
 Examples:
 
-ExpandFile = from Fact.csv to 1BillionRows.csv
+#### ExpandFile = from Fact.csv to 1BillionRows.csv
+
 .ExpandFactor: 123
 
-JoinTable = from 1BillionRows.csv to Test1Results.csv
+#### JoinTable = from 1BillionRows.csv to Test1Results.csv
+
 .Filter: Saleman(Mary,Peter,John)
 
 .JoinTable: Product, Category => InnerJoin(Master.csv)
@@ -49,17 +51,19 @@ JoinTable = from 1BillionRows.csv to Test1Results.csv
 
 .OrderBy: Saleman(A) Product(A) Date(D)
 
-SplitFile = from Test1Results.csv to FolderLake
+#### SplitFile = from Test1Results.csv to FolderLake
+
 .CreateFolderLake: Shop
 
-FilterFolder = from Outbox/FolderLake/S15/*.csv to Result-FilterFolderLake.csv
+#### FilterFolder = from Outbox/FolderLake/S15/*.csv to Result-FilterFolderLake.csv
+
 .Filter: Product(222..888) Style(=F)
 
-ReadSample2View = from Outbox/Result-FilterFolderLake.csv to SampleTable
+#### ReadSample2View = from Outbox/Result-FilterFolderLake.csv to SampleTable
+
 .ReadSample: StartPosition%(0) ByteLength(100000)
 
 .View
-
 ## Command List
 
    AddColumn{Column, Column => Math(NewColName)} 
