@@ -4,6 +4,7 @@ PyPeaks is a framework for extracting, transforming and loading (ETL) data using
 ## The Folder "preview-file"
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
+The following Peaks.py does not has rust code, however it use a C++ file seek function, it can run very fast.
 
 # Peaks.py
 This app is uploaded in this repository and used to validate and preview CSV files. For every 1% position of a CSV file, it will extract one row for validation and preview. On the screen, it will display 20 rows but will output all validated rows to a disk file. If you have any issues with this app, please leave your message at    https://github.com/hkpeaks/pypeaks/issues. 
