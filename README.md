@@ -9,7 +9,7 @@ Peaks Consolidation is purely an ETL framework, now PyPeaks extend to cover many
 
 PyPeaks will also be extended to cover realtime Web by Websocket.
 
-With the Python binding, PyPeaks can offer effective mean to support your machine learning exerciese interacting with Pytorch and Tensorflow.
+With the power of Python bindings, PyPeaks can offer effective mean to support your machine learning exerciese interacting with Pytorch and Tensorflow.
 
 ## The Folder "preview-file" is Python Call Rust 
 
