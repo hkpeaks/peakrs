@@ -51,34 +51,38 @@ elif len(sys.argv) == 2: ## Input 1 para "file_name.csv" after Python Preview_fi
     file_path = sys.argv[1]
 
 ## 1000 means validating of first row of 1000 partitions as given by the file_path
-csv_info, validate_byte = get_csv_info(file_path, 1000) 
+csv_info, validate_byte, error_message = get_csv_info(file_path, 1000) 
 
-## Print first 20 sample rows to screen
-view(bytes(validate_byte), csv_info)
+if len(error_message) > 0:
+    print(error_message)
+else:
 
-## Print all validated rows to a disk file "%Sample.csv"
-write_csv_sample_file(bytes(validate_byte), csv_info)
+    ## Print first 20 sample rows to screen
+    view(bytes(validate_byte), csv_info)
 
-## Print validation summary to screen
-print("File Size: " + number_display_format(float(csv_info.file_size)) + " bytes", end =" ")
-print("  Total Column: ", number_display_format(float(csv_info.total_column)))
-print("Validated Row: ", number_display_format(float(csv_info.validate_row)), end =" ")
-print("  Estimated Row: ", number_display_format(float(csv_info.estimate_row)))
+    ## Print all validated rows to a disk file "%Sample.csv"
+    write_csv_sample_file(bytes(validate_byte), csv_info)
 
-print("Column Name: ", end =" ")
+    ## Print validation summary to screen
+    print("File Size: " + number_display_format(float(csv_info.file_size)) + " bytes", end =" ")
+    print("  Total Column: ", number_display_format(float(csv_info.total_column)))
+    print("Validated Row: ", number_display_format(float(csv_info.validate_row)), end =" ")
+    print("  Estimated Row: ", number_display_format(float(csv_info.estimate_row)))
 
-for i in range(len(csv_info.column_name)):
-    if i < len(csv_info.column_name) - 1:
-        print(csv_info.column_name[i], end=",")
-    else:
-        print(csv_info.column_name[i])
+    print("Column Name: ", end =" ")
 
-if csv_info.delimiter == 0:
-    print("Delimiter: ")
-else:              
-    print("Delimiter: " + number_display_format(float(csv_info.delimiter)) + " [" + chr(csv_info.delimiter) + "]")
+    for i in range(len(csv_info.column_name)):
+        if i < len(csv_info.column_name) - 1:
+            print(csv_info.column_name[i], end=",")
+        else:
+            print(csv_info.column_name[i])
 
-print("Is Line Br 10/13 Exist: ", csv_info.is_line_br_10_exist, "/", csv_info.is_line_br_13_exist)
+    if csv_info.delimiter == 0:
+        print("Delimiter: ")
+    else:              
+        print("Delimiter: " + number_display_format(float(csv_info.delimiter)) + " [" + chr(csv_info.delimiter) + "]")
+
+    print("Is Line Br 10/13 Exist: ", csv_info.is_line_br_10_exist, "/", csv_info.is_line_br_13_exist)
 
 end = time()
 
