@@ -1,5 +1,5 @@
 # PyPeaks Dataframe
-PyPeaks is a dataframe library and framework for extracting, transforming, and loading (ETL) data. The first app I built is called “Preview File”, which can check if a file is a comma-separated values (CSV) file and identify its delimiter (other than a comma). If the file passes validation, you can preview a billion-row file instantly. The file can be divided into 1,000 or more partitions to extract and validate the first row of every partition. The whole process of this app for many cases I test runs instantly, no matter if the file size is over 10GB or has billions of rows.
+PyPeaks is a library and framework for dataframes that facilitates the extraction, transformation, and loading (ETL) of data. Its first application, “Preview File,” can verify whether a file is a comma-separated values (CSV) file and determine its delimiter other than comma. If the file passes validation, it can instantly preview a billion-row file. The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
 ## The Folder "preview-file" is Python Call Rust 
 
