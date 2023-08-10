@@ -1,6 +1,8 @@
 # PyPeaks Dataframe
 PyPeaks is a library and framework for dataframes that facilitates the extraction, transformation, and loading (ETL) of data. Its first application, “Preview File,” can verify whether a file is a comma-separated values (CSV) file and determine its delimiter other than comma. If the file passes validation, it can instantly preview a billion-row file. The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
+Like the Peaks Consolidation project https://github.com/hkpeaks/peaks-consolidation, you can easily configure complex and high-performance operations using a new ETL framework. The streaming engine takes care of allocating and distributing file partitions to the query engine, preventing your machine from running out of memory. This makes it simple to set up ETL processes and enjoy their benefits.
+
 ## The Folder "preview-file" is Python Call Rust 
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
@@ -20,7 +22,7 @@ The app will gradually expand to become an ETL Framework for Polars (and/or Pand
 
          python peaks "d:\your folder\data.csv"
 
-## New Query Statement for File, In-memory Table and Network Stream
+## New ETL Framework for File, In-memory Table and Network Stream
 
 Note: Use of "." to indicate it is member of your defined function is optional. 
 First line is to define data extraction and data load. Below are 3 possible scenarios:-
