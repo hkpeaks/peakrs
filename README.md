@@ -11,13 +11,13 @@ Peakrs will also be extended to cover realtime Web by Websocket.
 
 With the power of Python bindings, Peakrs can offer effective mean to support your machine learning exerciese interacting with Pytorch and Tensorflow.
 
-## The Folder "preview-file" is Python Call Rust 
+## The Folder "py-peakrs" is Python Running Rust Version of the Peaks
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
 
 The following Peaks.py does not has rust code, however it use a C++ file seek function, it can run very fast.
 
-## The File "preview.py" is Python without Call Rust
+## The File "preview.py" is Python Running File Seek C++ API
 This app is uploaded in this repository and used to validate and preview CSV files. For every 1% position of a CSV file, it will extract one row for validation and preview. On the screen, it will display 20 rows but will output all validated rows to a disk file. If you have any issues with this app, please leave your message at    https://github.com/hkpeaks/pypeaks/issues. 
 
 The app will gradually expand to become an ETL Framework for Polars (and/or Pandas, DuckDB, NumPy) with the implementation of the newly designed SQL statements. The ETL script will be compatible with the Peaks Consolidation https://github.com/hkpeaks/peaks-consolidation, meaning you can run the script using Python with Polars or purely using the Peaks runtime without Python.
