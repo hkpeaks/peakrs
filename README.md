@@ -5,7 +5,7 @@ Like the Peaks Consolidation project https://github.com/hkpeaks/peaks-consolidat
 
 Peaks Consolidation is written in Go, while PyPeaks is written in Rust with Python binging.
 
-Peaks Consolidation is purely an ETL framework, now PyPeaks extend to cover many Python and Rust API you run its as library.
+Peaks Consolidation is purely an ETL framework, now PyPeaks extend to cover many Python and Rust APIs you run its as library.
 
 ## The Folder "preview-file" is Python Call Rust 
 
