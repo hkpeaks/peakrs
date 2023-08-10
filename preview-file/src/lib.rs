@@ -825,10 +825,8 @@ fn write_csv_sample_file(byte_array: &[u8], csv_info: CsvInfo) {
 }
 
 #[pyfunction]
-fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u8>)> {
+fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u8>, String)> {
     
-    let mut _is_error: bool = false;
-    let mut error_message = String::new();
     let mut csv_info = CsvInfo {
         total_column: 0,
         validate_row: 0,
@@ -838,57 +836,49 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
         column_name: Vec::new(),
         file_size: 0,
         delimiter: 0,
-    };
-
-    let file = File::open(filepath);
-    let file2 = metadata(filepath);       
-
-    let mut frequency_distribution: HashMap<u8, i32>;
-    let mut _current_row_byte;
+    };       
+    
+    let mut _is_error: bool = false;
+    let mut error_message = String::new();    
+    let mut frequency_distribution_by_sample = HashMap::new();  
     let mut validate_byte = Vec::new();
     let mut start_byte = 0;
+    let mut sample_byte_count = 0;  
     let mut n = 0;
-    let mut _current_row_byte_count;
-    let mut sample_byte_count = 0;
-
-    let mut frequency_distribution_by_sample = HashMap::new();
+  
     let mut _delimiter_scenario = HashMap::new(); 
 
+    let file = File::open(filepath);
+    let fileinfo = metadata(filepath);     
     let mut file = file.unwrap();  
+    let fileinfo = fileinfo.unwrap();
 
-    let file2 = file2.unwrap();
+    csv_info.file_size = fileinfo.len() as i64;
 
-    csv_info.file_size = file2.len() as i64;
-
-    if sample_row <= 0 || csv_info.file_size < 10000 {
+    // Default output number of sample rows 
+    if sample_row <= 0 || csv_info.file_size <= 10000 {
         sample_row = 10;
     }
 
-    if csv_info.file_size < 1000 || sample_row < 2 {
+    if csv_info.file_size <= 1000 || sample_row <= 2 {
         sample_row = 2;
     }
 
     // Column Name
-    _current_row_byte_count =
-        get_current_row_frequency_distribution(&mut file, 0).0;
-    frequency_distribution =
-        get_current_row_frequency_distribution(&mut file, 0).1;
-    _current_row_byte =
-        get_current_row_frequency_distribution(&mut file, 0).2;
-    _delimiter_scenario = frequency_distribution.clone();
+   let (_current_row_byte_count, _frequency_distribution, _current_row_byte) = get_current_row_frequency_distribution(&mut file, 0);
+   
+    _delimiter_scenario = _frequency_distribution.clone();
 
     // Data Row
     while n <= sample_row as i64 - 1 {
         start_byte += 1;
-        _current_row_byte_count =
-            get_current_row_frequency_distribution(&mut file, start_byte).0;
-        frequency_distribution =
-            get_current_row_frequency_distribution(&mut file, start_byte).1;
-        _current_row_byte =
-            get_current_row_frequency_distribution(&mut file, start_byte).2;
+
+        let (_current_row_byte_count, _frequency_distribution, _current_row_byte) = get_current_row_frequency_distribution(&mut file, start_byte);
+   
         validate_byte.extend(_current_row_byte);
         sample_byte_count += _current_row_byte_count;
-        frequency_distribution_by_sample.insert(n, frequency_distribution.clone());
+        
+        frequency_distribution_by_sample.insert(n, _frequency_distribution.clone());       
 
         let mut temp_delimiter_scenario = HashMap::new();
 
@@ -908,6 +898,7 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
 
     csv_info.validate_row = n;
 
+    // Remove line break from current delimiters
     let mut delimiter_exclude_line_br = HashMap::new();
 
     for key in _delimiter_scenario.keys() {
@@ -922,13 +913,18 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
         }
     }
 
+    // Remove abc123 from current delimiters
     let mut delimiter_exclude_abc123 = HashMap::new();
 
     if delimiter_exclude_line_br.contains_key(&44) {
+
         csv_info.delimiter = 44;
         csv_info.total_column = delimiter_exclude_line_br[&44] + 1;
+
     } else if delimiter_exclude_line_br.len() == 1 {
+
         for key in delimiter_exclude_line_br.keys() {
+
             if *key <= 47
                 || (*key >= 58 && *key <= 64)
                 || (*key >= 91 && *key <= 96)
@@ -938,8 +934,12 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
                 csv_info.total_column = delimiter_exclude_line_br[key] + 1;
             }
         }
+
+    // If more than one delimiters, this may be recognized as error
     } else if delimiter_exclude_line_br.len() > 1 {
+
         for key in delimiter_exclude_line_br.keys() {
+
             if *key <= 47
                 || (*key >= 58 && *key <= 64)
                 || (*key >= 91 && *key <= 96)
@@ -950,11 +950,13 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
         }
 
         if delimiter_exclude_abc123.len() == 1 {
+
             for key in delimiter_exclude_abc123.keys() {
                 csv_info.delimiter = *key;
                 csv_info.total_column = delimiter_exclude_line_br[key] + 1;
             }
         } else if delimiter_exclude_abc123.len() > 1 {
+
             error_message.push_str("** More than one possible delimiter ** \n");
             for key in delimiter_exclude_abc123.keys() {
                 error_message.push_str(&format!(
@@ -966,13 +968,16 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
         }
     }
 
+    // Record error messages
    if _is_error == false  {
+
          csv_info.column_name = get_column_name(&mut file, csv_info.delimiter);
          csv_info.estimate_row =
              csv_info.file_size as i64 / sample_byte_count as i64 * sample_row as i64;
 
-         if delimiter_exclude_line_br.is_empty() {
+         if delimiter_exclude_line_br.is_empty() {            
              error_message.push_str("** Fail to find delimiter ** \n");
+
          } else {
              if csv_info.total_column == 0 {
                  error_message.push_str("** Fail to count number of column ** \n");
@@ -996,7 +1001,7 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
          }
      }    
 
-     Ok((csv_info, validate_byte))    
+     Ok((csv_info, validate_byte, error_message))    
 }
 
 #[pymodule]
