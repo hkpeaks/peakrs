@@ -24,15 +24,14 @@ The app will gradually expand to become an ETL Framework for Polars (and/or Pand
     
     How to use this app:
 
-    Python Peaks.py File or File Path
+    Python preview-file.py File or File Path
 
-    e.g. python peaks data.csv
+    e.g. python preview-file data.csv
 
-         python peaks "d:\your folder\data.csv"
+         python preview-file "d:\your folder\data.csv"
 
 ## New ETL Framework for File, In-memory Table and Network Stream
 
-Note: Use of "." to indicate it is member of your defined function is optional. 
 First line is to define data extraction and data load. Below are 3 possible scenarios:-
 
 UserDefineFunctionName = from Extraction to Load
