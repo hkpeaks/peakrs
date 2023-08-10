@@ -7,6 +7,10 @@ Peaks Consolidation is written in Go, while PyPeaks is written in Rust with Pyth
 
 Peaks Consolidation is purely an ETL framework, now PyPeaks extend to cover many Python and Rust APIs you run its as library.
 
+PyPeaks will also be extended to cover realtime Web by Websocket.
+
+With the Python binding, PyPeaks can offer effective mean to support your machine learning exerciese interacting with Pytorch and Tensorflow.
+
 ## The Folder "preview-file" is Python Call Rust 
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
