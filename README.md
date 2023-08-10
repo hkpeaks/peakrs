@@ -1,7 +1,7 @@
-# PyPeaks Is Under Construction
-PyPeaks is a framework for extracting, transforming and loading (ETL) data using Python libraries that are compatible with Arrow, such as Pandas, Polars and DuckDB. These libraries can act as calculation engines for data analysis. One of the functions that PyPeaks is developing is “isCSV.py”, which can check if a file is a valid comma-separated values (CSV) file and identify its delimiter. This function can help to configure the Python libraries correctly by using the following SQL statement:
+# PyPeaks Dataframe
+PyPeaks is a library and framework for extracting, transforming and loading (ETL) data using Python libraries that are compatible with Arrow, such as Pandas, Polars and DuckDB. These libraries can act as calculation engines for data analysis. One of the functions that PyPeaks is developing is “isCSV.py”, which can check if a file is a valid comma-separated values (CSV) file and identify its delimiter. This function can help to configure the Python libraries correctly by using the following SQL statement:
 
-# The Folder "preview-file" is Python Call Rust
+# The Folder "preview-file" is Python Call Rust 
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
 
