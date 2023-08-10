@@ -1,5 +1,5 @@
 # PyPeaks Dataframe
-PyPeaks is a library and framework for extracting, transforming and loading (ETL) data using Python libraries that are compatible with Arrow, such as Pandas, Polars and DuckDB. These libraries can act as calculation engines for data analysis. One of the functions that PyPeaks is developing is “isCSV.py”, which can check if a file is a valid comma-separated values (CSV) file and identify its delimiter. This function can help to configure the Python libraries correctly by using the following SQL statement:
+PyPeaks is a library and framework for extracting, transforming and loading (ETL) data using Python libraries that are compatible with Arrow, such as Pandas, Polars and DuckDB. These libraries can act as calculation engines for data analysis. One of the functions that PyPeaks is developed is “Preview File”, which can check if a file is a valid comma-separated values (CSV) file and identify its delimiter and allow to preview a billion-row file instantly. It can be divided into 1,000 partitions, the app will extract and validate first row of every partition https://youtu.be/71GHzDnEYno.
 
 # The Folder "preview-file" is Python Call Rust 
 
