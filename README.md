@@ -3,6 +3,9 @@ PyPeaks is a library and framework for dataframes that facilitates the extractio
 
 Like the Peaks Consolidation project https://github.com/hkpeaks/peaks-consolidation, you can easily configure complex and high-performance operations using a new ETL framework. The streaming engine takes care of allocating and distributing file partitions to the query engine, preventing your machine from running out of memory. This makes it simple to set up ETL processes and enjoy their benefits.
 
+Peaks Consolidation is written in Go, while PyPeaks is written in Rust with Python binging.
+Peaks Consolidation is purely an ETL framework, now PyPeaks extend to cover many Python and Rust API you run its as library.
+
 ## The Folder "preview-file" is Python Call Rust 
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
