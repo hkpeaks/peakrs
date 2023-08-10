@@ -1,0 +1,12 @@
+[package]
+name = "pyo3"
+version = "0.1.0"
+edition = "2018"
+
+[lib]
+name = "peakrs"
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.14.4"
+features = ["extension-module"]
