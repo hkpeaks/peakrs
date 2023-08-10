@@ -25,7 +25,7 @@
 
 from time import time
 import sys
-import peakrs as ps
+import peakrs as pr
 
 ## This simple function is not suitable migrating to Rust
 def number_display_format(num: float) -> str:
@@ -47,20 +47,20 @@ if __name__ == "__main__":
 if len(sys.argv) == 1: ## Input 0 para after Python Preview_file.py
     file_path = "Data.csv" ## default value
 elif len(sys.argv) == 2: ## Input 1 para "file_name.csv" after Python Preview_file.py
-    file_path = sys.argv[1]
+    file_path = sys.argv[1]    
 
 ## 1000 means validating of first row of 1000 partitions as given by the file_path
-csv_info, validate_byte, error_message = ps.get_csv_info(file_path, 1000) 
+csv_info, validate_byte, error_message = pr.get_csv_info(file_path, 1000) 
 
 if len(error_message) > 0:
     print(error_message)
 else:
 
     ## Print first 20 sample rows to screen
-    ps.view(bytes(validate_byte), csv_info)
+    pr.view(bytes(validate_byte), csv_info)
 
     ## Print all validated rows to a disk file "%Sample.csv"
-    ps.write_csv_sample_file(bytes(validate_byte), csv_info)
+    pr.write_csv_sample_file(bytes(validate_byte), csv_info)
 
     ## Print validation summary to screen
     print("File Size: " + number_display_format(float(csv_info.file_size)) + " bytes", end =" ")
