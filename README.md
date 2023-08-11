@@ -15,52 +15,7 @@ With the power of Python bindings, Peakrs can offer effective mean to support yo
 
 This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
 
-The following Peaks.py does not has rust code, however it use a C++ file seek function, it can run very fast.
-
-Sample App extracted from run.py of the above folder "py-peakrs":-
-
-``
-
-** peakrs will be arranged for registering in Pypi **
-
-import peakrs as pr
-
-** 1000 means validating first row of 1000 partitions as given by the file_path **
-
-csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000) 
-
-if len(csv_meta.error_message) > 0:
-    print(csv_meta.error_message)
-else: 
-
-    ** Print first 20 sample rows to screen **
-    pr.view_csv(csv_vector, csv_meta)
-
-    ** Print all validated rows to a disk file "%Sample.csv **
-    pr.write_csv(csv_vector, csv_meta)
-
-    **  Print validation summary to screen **
-    print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")
-    print("  Total Column: ", format(csv_meta.total_column))
-    print("Validated Row: ", format(csv_meta.validate_row), end =" ")
-    print("  Estimated Row: ",format(csv_meta.estimate_row))
-
-    print("Column Name: ", end =" ")
-
-    for i in range(len(csv_meta.column_name)):
-        if i < len(csv_meta.column_name) - 1:
-            print(csv_meta.column_name[i], end=",")
-        else:
-            print(csv_meta.column_name[i])
-
-    if csv_meta.delimiter == 0:
-        print("Delimiter: ")
-    else:              
-        print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")
-
-    print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)
-
-``
+See instruction in the file "run.py".
 
 ## New ETL Framework for File, In-memory Table and Network Stream
 
