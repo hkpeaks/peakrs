@@ -19,22 +19,22 @@ The following Peaks.py does not has rust code, however it use a C++ file seek fu
 
 Sample App extracted from run.py of the above folder "py-peakrs":-
 ``
-## peakrs will be arranged for registering in Pypi
+** peakrs will be arranged for registering in Pypi **
 import peakrs as pr
 
-## 1000 means validating first row of 1000 partitions as given by the file_path
+** 1000 means validating first row of 1000 partitions as given by the file_path **
 csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000) 
 
 if len(csv_meta.error_message) > 0:
     print(csv_meta.error_message)
 else: 
-    ## Print first 20 sample rows to screen
+    ** Print first 20 sample rows to screen **
     pr.view_csv(csv_vector, csv_meta)
 
-    ## Print all validated rows to a disk file "%Sample.csv"
+    ** Print all validated rows to a disk file "%Sample.csv **
     pr.write_csv(csv_vector, csv_meta)
 
-    ## Print validation summary to screen
+    **  Print validation summary to screen **
     print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")
     print("  Total Column: ", format(csv_meta.total_column))
     print("Validated Row: ", format(csv_meta.validate_row), end =" ")
