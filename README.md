@@ -1,17 +1,17 @@
 # Peakrs Dataframe
 Peakrs Dataframe is a library and framework facilitates the extraction, transformation, and loading (ETL) of data. Its first application:-
 
-  import peakrs as pr
+  ``import peakrs as pr``
   
-  pr.csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)
+  ``pr.csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)``
 
 It can verify whether a file is a comma-separated values (CSV) file and determine its delimiter other than comma. If the file passes validation, it can instantly preview a billion-row file. 
  
-  pr.view_csv(csv_vector, csv_meta)
+ `` pr.view_csv(csv_vector, csv_meta)``
 
 And you can output to disk file
 
-  pr.write_csv(csv_vector, csv_meta)
+  ``pr.write_csv(csv_vector, csv_meta)``
 
 The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
