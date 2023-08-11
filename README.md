@@ -17,12 +17,12 @@ The file can be split into 1,000 or more partitions to extract and validate the 
 
 You can print the meta information
 
-    ``print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")``
-    ``print("  Total Column: ", format(csv_meta.total_column))``
-    ``print("Validated Row: ", format(csv_meta.validate_row), end =" ")``
-    ``print("  Estimated Row: ",format(csv_meta.estimate_row))``
-    ``print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")``
-    ``print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)``
+    print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")
+    print("  Total Column: ", format(csv_meta.total_column))
+    print("Validated Row: ", format(csv_meta.validate_row), end =" ")
+    print("  Estimated Row: ",format(csv_meta.estimate_row))
+    print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")
+    print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)
 
 Like the Peaks Consolidation project https://github.com/hkpeaks/peaks-consolidation, you can easily configure complex and high-performance operations using a new ETL framework. The streaming engine takes care of allocating and distributing file partitions to the query engine, preventing your machine from running out of memory. This makes it simple to set up ETL processes and enjoy their benefits. In addtion, the design of the streaming engine can avoid generating many temp files which make your disk run out of disk space.
 
