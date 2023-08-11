@@ -44,3 +44,50 @@ With the power of Python bindings, Peakrs can offer effective mean to support yo
 This app is written in Rust with Python binding using Pyo3. 
 
 Please refer to the instructions in the ‘run.py’ file. This file allows you to preview CSV files and their metadata instantly, even if the file size exceeds 10GB. Demo video: https://youtu.be/71GHzDnEYno
+
+## Command List
+
+   add_column(vector, meta_info, "column, column => math(new_col_name)"} 
+   
+        where math includes add, subtract, multiply & divide
+    
+   build_keyvalue(vector, meta_info, "column, column ~ keyvalue_tablename")
+   
+   distinct(vector, meta_info, "column, column")
+ 
+   filter(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
+ 
+   filter_unmatch(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
+
+        where compare operator includes >,<,>=,<=,=,!= & Range e.g. 100..200
+              compare integer or float e.g. Float > number, float100..200
+   
+   groupby(vector, meta_info, "column, column => count() sum(Column) max(Column) min(Column)")
+   
+   join_keyvalue(vector, meta_info, "column, column => join_type(keyvalue_table_name)")
+   
+   jointable(vector, meta_info, "column, Column => join_type(KeyValueTableName)")
+
+        where join_type includes all_match & inner
+   
+   orderBy(vector, meta_info,"primary_col(Sorting Order) secondary_col(sorting order)")       
+  
+   orderBy{vector, meta_info, "secondaryCol(Sorting Order) => create_folder_lake(primary_col) ~ folder_name or file_name.csv"}
+
+        where sorting order represents by A or D, to sort real numbers, use either floatA or floatD
+ 
+   read_csv(file_path/file_name.csv)
+   
+   select(vector, meta_info, "column, column")
+   
+   select_unmatch(vector, meta_info, "column, column")  
+   
+   split_file{file_path/file_name.csv, number_of_split)
+   
+   create_folder_lake(vector, meta_info, "column, column => split_folder_name"}
+   
+   view(vector, meta_info)
+
+   write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv} 
+
+
