@@ -52,7 +52,7 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
 
    vector, meta_info = pr.add_column(vector, meta_info, "column, column => math(new_col_name)") 
    
-        where math includes add, subtract, multiply & divide
+        where math includes add, subtract, multiply and divide
     
    vector, meta_info = pr.build_keyvalue(vector, meta_info, "column, column => keyvalue_tablename")
    
@@ -73,9 +73,9 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
 
         where join_type includes all_match & inner
    
-   vector, meta_info = pr.orderBy(vector, meta_info,"primary_col(sorting order) secondary_col(sorting order)")       
+   vector, meta_info = pr.orderby(vector, meta_info,"primary_col(sorting order) secondary_col(sorting order)")       
   
-   meta_info = pr.orderBy{vector, meta_info, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv))
+   meta_info = pr.orderby{vector, meta_info, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv))
 
         where sorting order represents by A or D, to sort real numbers, use either floatA or floatD
  
@@ -85,7 +85,7 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
    
    vector, meta_info = pr.select_unmatch(vector, meta_info, "column, column")  
    
-   meta_info = pr.split_file(file_path/file_name.csv, number_of_split)
+   meta_info = pr.split_file(file_path or file_name.csv, number_of_split)
    
    meta_info = pr.create_folder_lake(vector, meta_info, "column, column => split_folder_name")
    
