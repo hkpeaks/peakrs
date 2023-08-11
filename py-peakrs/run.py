@@ -44,7 +44,7 @@ def format(num: float) -> str:
 if __name__ == "__main__":
    start = time()
 
-if len(sys.argv) == 1: ## Input 0 para after Python Preview_file.py
+if len(sys.argv) == 1: ## Input 0 para after Python run.py
     file_path = "Mushroom.csv" ## default value
 elif len(sys.argv) == 2: ## Input 1 para "file_name.csv" after Python Preview_file.py
     file_path = sys.argv[1]    
