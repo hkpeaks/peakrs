@@ -62,14 +62,14 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
  
    vector, meta_info = pr.filter_unmatch(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
 
-        where compare operator includes >,<,>=,<=,=,!= & Range e.g. 100..200
+        where compare_operator includes >,<,>=,<=,=,!= & Range e.g. 100..200
               compare integer or float e.g. Float > number, float100..200
    
    vector, meta_info = pr.groupby(vector, meta_info, "column, column => count() sum(Column) max(Column) min(Column)")
    
    vector, meta_info = pr.join_keyvalue(vector, meta_info, "column, column => join_type(keyvalue_table_name)")
    
-   vector, meta_info = pr.jointable(vector, meta_info, "column, Column => join_type(KeyValueTableName)")
+   vector, meta_info = pr.jointable(vector, meta_info, "column, Column => join_type(keyvalue_table_name)")
 
         where join_type includes all_match & inner
    
