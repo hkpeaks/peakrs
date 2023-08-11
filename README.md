@@ -5,7 +5,7 @@ Peakrs Dataframe is a library and framework facilitates the extraction, transfor
   
 ``pr.csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)``
 
-1000 represents number of sample row you want to get.
+1,000 represents number of sample row you want to get. The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
 It can verify whether a file is a comma-separated values (CSV) file and determine its delimiter other than comma. If the file passes validation, it can instantly preview a billion-row file. 
  
@@ -14,8 +14,6 @@ It can verify whether a file is a comma-separated values (CSV) file and determin
 And you can output all validated rows to a disk file
 
 ``pr.write_csv(csv_vector, csv_meta)``
-
-The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
 You can print the meta information.
 
