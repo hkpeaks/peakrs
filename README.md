@@ -86,7 +86,7 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
    
    meta_info = create_folder_lake(vector, meta_info, "column, column => split_folder_name")
    
-   view(vector, meta_info)
+   meta_info = view(vector, meta_info)
 
    meta_info = write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv} 
 
