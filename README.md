@@ -54,7 +54,7 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
    
         where math includes add, subtract, multiply & divide
     
-   vector, meta_info = pr.build_keyvalue(vector, meta_info, "column, column ~ keyvalue_tablename")
+   vector, meta_info = pr.build_keyvalue(vector, meta_info, "column, column => keyvalue_tablename")
    
    vector, meta_info = pr.distinct(vector, meta_info, "column, column")
  
@@ -73,24 +73,24 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
 
         where join_type includes all_match & inner
    
-   vector, meta_info = pr.orderBy(vector, meta_info,"primary_col(Sorting Order) secondary_col(sorting order)")       
+   vector, meta_info = pr.orderBy(vector, meta_info,"primary_col(sorting order) secondary_col(sorting order)")       
   
-   meta_info = pr.orderBy{vector, meta_info, "secondaryCol(Sorting Order) => create_folder_lake(primary_col) ~ folder_name or file_name.csv"}
+   meta_info = pr.orderBy{vector, meta_info, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv))
 
         where sorting order represents by A or D, to sort real numbers, use either floatA or floatD
  
-   vector, meta_info = pr.read_csv(file_path/file_name.csv)
+   vector, meta_info = pr.read_csv(file_path or file_name.csv)
    
    vector, meta_info = pr.select(vector, meta_info, "column, column")
    
    vector, meta_info = pr.select_unmatch(vector, meta_info, "column, column")  
    
-   meta_info = pr.split_file{file_path/file_name.csv, number_of_split)
+   meta_info = pr.split_file(file_path/file_name.csv, number_of_split)
    
    meta_info = pr.create_folder_lake(vector, meta_info, "column, column => split_folder_name")
    
    meta_info = pr.view(vector, meta_info)
 
-   meta_info = pr.write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv} 
+   meta_info = pr.write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv) 
 
 
