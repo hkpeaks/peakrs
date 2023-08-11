@@ -7,7 +7,7 @@ use std::io::{Write, BufWriter};
 
 #[pyclass]
 #[derive(Clone)]
-struct CsvInfo {
+struct CsvMeta {
     total_column: i32,
     validate_row: i64,
     estimate_row: i64,
@@ -15,11 +15,12 @@ struct CsvInfo {
     is_line_br_10_exist: bool,
     column_name: Vec<String>,
     file_size: i64,
-    delimiter: u8,
+    delimiter: u8,   
+    error_message: String, 
 }
 
 #[pymethods]
-impl CsvInfo {
+impl CsvMeta {
     #[getter]
     fn get_total_column(&self) -> PyResult<i32> {
         Ok(self.total_column)
@@ -58,10 +59,17 @@ impl CsvInfo {
     #[getter]
     fn get_delimiter(&self) -> PyResult<u8> {
         Ok(self.delimiter)
-    }
+    }   
+
+    
+    #[getter]
+    fn get_error_message(&self) -> PyResult<String> {
+        Ok(self.error_message.clone())
+    }       
 }
 
-fn get_byte_array_frequency_distribution(byte_array: &[u8]) -> HashMap<u8, i32> {
+
+fn get_byte_array_frequency_distribution(byte_array: &Vec<u8>) -> HashMap<u8, i32> {
    
     let mut frequency_distribution = HashMap::new();
 
@@ -121,7 +129,7 @@ fn get_current_row_frequency_distribution(file: &mut File, start_byte: i64) -> (
 
         if is_second_line_break_exist && !current_row.is_empty() {
             frequency_distribution =
-                get_byte_array_frequency_distribution(&current_row);
+                get_byte_array_frequency_distribution(&current_row.clone());
             is_valid_row_exist = true;
         }
     }
@@ -129,7 +137,7 @@ fn get_current_row_frequency_distribution(file: &mut File, start_byte: i64) -> (
     (current_row.len(), frequency_distribution, current_row)
 }
 
-fn skip_white_space(byte_array: &[u8], mut start_byte: i64, mut end_byte: i64) -> (i64, i64) {
+fn skip_white_space(byte_array: &Vec<u8>, mut start_byte: i64, mut end_byte: i64) -> (i64, i64) {
     
     while start_byte < end_byte && byte_array[start_byte as usize] == 32 {
         start_byte += 1;
@@ -201,9 +209,9 @@ fn get_column_name(file: &mut File, delimiter: u8) -> Vec<String> {
     column_name
 }
 
-fn cell_address(byte_array: &[u8], csv_info: CsvInfo) -> Vec<i64> {
+fn cell_address(byte_array: &Vec<u8>, csv_meta: CsvMeta) -> Vec<i64> {
     
-    let read_csv_delimiter = csv_info.delimiter;
+    let read_csv_delimiter = csv_meta.delimiter;
 
     let mut cell_address = Vec::new();
     let mut double_quote_count = 0;
@@ -230,31 +238,31 @@ fn cell_address(byte_array: &[u8], csv_info: CsvInfo) -> Vec<i64> {
     cell_address
 }
 
-fn current_view(byte_array: &[u8], csv_info: CsvInfo, start_column: i32, end_column: i32, total_row: i32) {
+fn current_view(byte_array: &Vec<u8>, csv_meta: CsvMeta, start_column: i32, end_column: i32, total_row: i32) {
     
-    let cell_address = cell_address(byte_array, csv_info.clone());
+    let cell_address = cell_address(byte_array, csv_meta.clone());
 
-    let extra_line_br_char = if csv_info.is_line_br_13_exist { 1 } else { 0 };
+    let extra_line_br_char = if csv_meta.is_line_br_13_exist { 1 } else { 0 };
     
-    let max_col = csv_info.total_column + extra_line_br_char - 1;    
+    let max_col = csv_meta.total_column + extra_line_br_char - 1;    
     let cell = cell_address.len() as u32 - max_col as u32 + 1;
     let mut n = 0u32;
     let mut current_row = 0i32;    
     let mut temp_bytes: Vec<u8> = Vec::new();
-    let read_csv_delimiter = csv_info.delimiter;
+    let read_csv_delimiter = csv_meta.delimiter;
     let mut max_text_length = HashMap::new();
     let mut max_integer_length = HashMap::new();
     let mut max_decimal_length = HashMap::new();
     let mut max_column_width = HashMap::new();
     let mut is_column_real_number = HashMap::new();
 
-    let csv_info = csv_info.clone();
+    let csv_meta = csv_meta.clone();
 
     for current_column in start_column..end_column {        
         max_text_length.insert(current_column, 1);
         max_integer_length.insert(current_column, 1);
         max_decimal_length.insert(current_column, 1);
-        max_column_width.insert(current_column, csv_info.column_name[current_column as usize].len());
+        max_column_width.insert(current_column, csv_meta.column_name[current_column as usize].len());
         is_column_real_number.insert(current_column, true);
     }
 
@@ -405,7 +413,7 @@ fn current_view(byte_array: &[u8], csv_info: CsvInfo, start_column: i32, end_col
 
     for current_column in start_column..end_column {
         // Display Column Name
-        let current_columm_name = &csv_info.column_name[current_column as usize];
+        let current_columm_name = &csv_meta.column_name[current_column as usize];
         let current_length = current_columm_name.len();
 
         if is_column_real_number[&current_column] {
@@ -548,20 +556,20 @@ fn current_view(byte_array: &[u8], csv_info: CsvInfo, start_column: i32, end_col
     println!("{}", String::from_utf8_lossy(&result_bytes));
 }
 
-fn max_column_width(byte_array: &[u8], csv_info: CsvInfo) -> (bool, HashMap<i32, i32>) {
+fn max_column_width(byte_array: &Vec<u8>, csv_meta: CsvMeta) -> (bool, HashMap<i32, i32>) {
     
-    let cell_address = cell_address(byte_array, csv_info.clone());
+    let cell_address = cell_address(byte_array, csv_meta.clone());
     let is_zero_row = byte_array.is_empty();   
-    let extra_line_br_char = if csv_info.is_line_br_13_exist { 1 } else { 0 };   
-    let max_col = csv_info.total_column + extra_line_br_char - 1;
+    let extra_line_br_char = if csv_meta.is_line_br_13_exist { 1 } else { 0 };   
+    let max_col = csv_meta.total_column + extra_line_br_char - 1;
     let max_col2 = max_col as usize;
     let cell = cell_address.len() - (max_col2 + 1);
-    let total_column = csv_info.total_column;
+    let total_column = csv_meta.total_column;
     let mut n = 0u32;
     let mut current_row = 0i32;    
     let mut temp_bytes: Vec<u8> = Vec::new();    
 
-    let read_csv_delimiter = csv_info.delimiter;
+    let read_csv_delimiter = csv_meta.delimiter;
     let mut max_text_length = HashMap::new();
     let mut max_integer_length = HashMap::new();
     let mut max_decimal_length = HashMap::new();
@@ -572,7 +580,7 @@ fn max_column_width(byte_array: &[u8], csv_info: CsvInfo) -> (bool, HashMap<i32,
         max_text_length.insert(current_column, 1);
         max_integer_length.insert(current_column, 1);
         max_decimal_length.insert(current_column, 1);
-        max_column_width.insert(current_column, csv_info.column_name[current_column as usize].len() as i32);
+        max_column_width.insert(current_column, csv_meta.column_name[current_column as usize].len() as i32);
         is_column_real_number.insert(current_column, true);
     }
 
@@ -717,8 +725,8 @@ fn max_column_width(byte_array: &[u8], csv_info: CsvInfo) -> (bool, HashMap<i32,
 }
 
 #[pyfunction]
-fn view(byte_array: &[u8], csv_info: CsvInfo) {
-    let (is_zero_row, max_column_width) = max_column_width(byte_array, csv_info.clone());
+fn view_csv(byte_array: Vec<u8>, csv_meta: CsvMeta) {
+    let (is_zero_row, max_column_width) = max_column_width(&byte_array, csv_meta.clone());
 
     if !is_zero_row {
         let mut total_width = 0;
@@ -743,8 +751,8 @@ fn view(byte_array: &[u8], csv_info: CsvInfo) {
                 current_width += max_column_width[&(current_column as i32)];
                 if current_width > 100 * table_count {
                     current_view(
-                        byte_array,
-                        csv_info.clone(),
+                        &byte_array,
+                        csv_meta.clone(),
                         start_column,
                         current_column as i32,
                         total_row,
@@ -757,8 +765,8 @@ fn view(byte_array: &[u8], csv_info: CsvInfo) {
             }
 
             current_view(
-                byte_array,
-                csv_info.clone(),
+                &byte_array,
+                csv_meta.clone(),
                 start_column,
                 max_column_width.len() as i32,
                 total_row,
@@ -770,8 +778,8 @@ fn view(byte_array: &[u8], csv_info: CsvInfo) {
                 current_width += max_column_width[&(current_column as i32)];
                 if current_width > total_width / 2 {
                     current_view(
-                        byte_array,
-                        csv_info.clone(),
+                        &byte_array,
+                        csv_meta.clone(),
                         0,
                         current_column as i32,
                         total_row,
@@ -783,16 +791,16 @@ fn view(byte_array: &[u8], csv_info: CsvInfo) {
             }
 
             current_view(
-                byte_array,
-                csv_info.clone(),
+                &byte_array,
+                csv_meta.clone(),
                 start_column,
                 max_column_width.len() as i32,
                 total_row,
             );
         } else {
             current_view(
-                byte_array,
-                csv_info,
+                &byte_array,
+                csv_meta,
                 0,
                 max_column_width.len() as i32,
                 total_row,
@@ -802,14 +810,14 @@ fn view(byte_array: &[u8], csv_info: CsvInfo) {
 }
 
 #[pyfunction]
-fn write_csv_sample_file(byte_array: &[u8], csv_info: CsvInfo) {
+fn write_csv(byte_array: Vec<u8>, csv_meta: CsvMeta) {
     let mut csv_string = String::new();
 
-    csv_string.push_str(&csv_info.column_name[0]);
+    csv_string.push_str(&csv_meta.column_name[0]);
 
-    for i in 1..csv_info.column_name.len() {
+    for i in 1..csv_meta.column_name.len() {
         csv_string.push_str(",");
-        csv_string.push_str(&csv_info.column_name[i]);
+        csv_string.push_str(&csv_meta.column_name[i]);
     }
 
     csv_string.push_str("\r\n");
@@ -818,16 +826,16 @@ fn write_csv_sample_file(byte_array: &[u8], csv_info: CsvInfo) {
     let mut f = BufWriter::new(f);
 
     f.write_all(csv_string.as_bytes()).expect("Unable to write data");
-    f.write_all(byte_array).expect("Unable to write data");
+    f.write_all(&byte_array).expect("Unable to write data");
 
     println!("A file named %Sample.csv is created from the rows that executed validation.");
     println!();
 }
 
 #[pyfunction]
-fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u8>, String)> {
+fn get_csv_sample(filepath: &str, mut sample_row: i32) -> PyResult<(Vec<u8>, CsvMeta)> {
     
-    let mut csv_info = CsvInfo {
+    let mut csv_meta = CsvMeta {
         total_column: 0,
         validate_row: 0,
         estimate_row: 0,
@@ -836,12 +844,13 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
         column_name: Vec::new(),
         file_size: 0,
         delimiter: 0,
+        error_message: String::new(), 
     };       
     
     let mut _is_error: bool = false;
     let mut error_message = String::new();    
     let mut frequency_distribution_by_sample = HashMap::new();  
-    let mut validate_byte = Vec::new();
+    let mut csv_vector = Vec::new();
     let mut start_byte = 0;
     let mut sample_byte_count = 0;  
     let mut n = 0;
@@ -853,14 +862,14 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
     let mut file = file.unwrap();  
     let fileinfo = fileinfo.unwrap();
 
-    csv_info.file_size = fileinfo.len() as i64;
+    csv_meta.file_size = fileinfo.len() as i64;
 
     // Default output number of sample rows 
-    if sample_row <= 0 || csv_info.file_size <= 10000 {
+    if sample_row <= 0 || csv_meta.file_size <= 10000 {
         sample_row = 10;
     }
 
-    if csv_info.file_size <= 1000 || sample_row <= 2 {
+    if csv_meta.file_size <= 1000 || sample_row <= 2 {
         sample_row = 2;
     }
 
@@ -875,7 +884,7 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
 
         let (_current_row_byte_count, _frequency_distribution, _current_row_byte) = get_current_row_frequency_distribution(&mut file, start_byte);
    
-        validate_byte.extend(_current_row_byte);
+        csv_vector.extend(_current_row_byte);
         sample_byte_count += _current_row_byte_count;
         
         frequency_distribution_by_sample.insert(n, _frequency_distribution.clone());       
@@ -892,11 +901,11 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
 
         _delimiter_scenario = temp_delimiter_scenario;
 
-        start_byte = csv_info.file_size * n / sample_row as i64;
+        start_byte = csv_meta.file_size * n / sample_row as i64;
         n += 1;
     }
 
-    csv_info.validate_row = n;
+    csv_meta.validate_row = n;
 
     // Remove line break from current delimiters
     let mut delimiter_exclude_line_br = HashMap::new();
@@ -906,9 +915,9 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
             delimiter_exclude_line_br.insert(*key, _delimiter_scenario[key]);
         } else {
             if *key == 10 {
-                csv_info.is_line_br_10_exist = true;
+                csv_meta.is_line_br_10_exist = true;
             } else if *key == 13 {
-                csv_info.is_line_br_13_exist = true;
+                csv_meta.is_line_br_13_exist = true;
             }
         }
     }
@@ -918,8 +927,8 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
 
     if delimiter_exclude_line_br.contains_key(&44) {
 
-        csv_info.delimiter = 44;
-        csv_info.total_column = delimiter_exclude_line_br[&44] + 1;
+        csv_meta.delimiter = 44;
+        csv_meta.total_column = delimiter_exclude_line_br[&44] + 1;
 
     } else if delimiter_exclude_line_br.len() == 1 {
 
@@ -930,8 +939,8 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
                 || (*key >= 91 && *key <= 96)
                 || *key >= 123
             {
-                csv_info.delimiter = *key;
-                csv_info.total_column = delimiter_exclude_line_br[key] + 1;
+                csv_meta.delimiter = *key;
+                csv_meta.total_column = delimiter_exclude_line_br[key] + 1;
             }
         }
 
@@ -952,8 +961,8 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
         if delimiter_exclude_abc123.len() == 1 {
 
             for key in delimiter_exclude_abc123.keys() {
-                csv_info.delimiter = *key;
-                csv_info.total_column = delimiter_exclude_line_br[key] + 1;
+                csv_meta.delimiter = *key;
+                csv_meta.total_column = delimiter_exclude_line_br[key] + 1;
             }
         } else if delimiter_exclude_abc123.len() > 1 {
 
@@ -971,44 +980,45 @@ fn get_csv_info(filepath: &str, mut sample_row: i32) -> PyResult<(CsvInfo, Vec<u
     // Record error messages
    if _is_error == false  {
 
-         csv_info.column_name = get_column_name(&mut file, csv_info.delimiter);
-         csv_info.estimate_row =
-             csv_info.file_size as i64 / sample_byte_count as i64 * sample_row as i64;
+         csv_meta.column_name = get_column_name(&mut file, csv_meta.delimiter);
+         csv_meta.estimate_row =
+             csv_meta.file_size as i64 / sample_byte_count as i64 * sample_row as i64;
 
          if delimiter_exclude_line_br.is_empty() {            
              error_message.push_str("** Fail to find delimiter ** \n");
 
          } else {
-             if csv_info.total_column == 0 {
+             if csv_meta.total_column == 0 {
                  error_message.push_str("** Fail to count number of column ** \n");
              }
 
-             if csv_info.estimate_row == 0 {
+             if csv_meta.estimate_row == 0 {
                  error_message.push_str("** Fail to estimate number of row ** \n");
              }
 
-             if csv_info.column_name.is_empty() {
+             if csv_meta.column_name.is_empty() {
                  error_message.push_str("** Fail to find any column name ** \n");
              }
 
-             if csv_info.column_name.len() != csv_info.total_column as usize {
+             if csv_meta.column_name.len() != csv_meta.total_column as usize {
                  error_message.push_str("** Number of column name is ");
-                 error_message.push_str(&csv_info.column_name.len().to_string());
+                 error_message.push_str(&csv_meta.column_name.len().to_string());
                  error_message.push_str(", but number of column is ");
-                 error_message.push_str(&csv_info.total_column.to_string());
+                 error_message.push_str(&csv_meta.total_column.to_string());
                  error_message.push_str(" ** \n");
              }
          }
+         csv_meta.error_message = error_message
      }    
 
-     Ok((csv_info, validate_byte, error_message))    
+     Ok((csv_vector, csv_meta))    
 }
 
 #[pymodule]
 fn peakrs(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(get_csv_info, m)?)?;
-    m.add_function(wrap_pyfunction!(view, m)?)?;
-    m.add_function(wrap_pyfunction!(write_csv_sample_file, m)?)?;    
-    m.add_class::<CsvInfo>().unwrap();
+    m.add_function(wrap_pyfunction!(get_csv_sample, m)?)?;
+    m.add_function(wrap_pyfunction!(view_csv, m)?)?;
+    m.add_function(wrap_pyfunction!(write_csv, m)?)?;    
+    m.add_class::<CsvMeta>().unwrap();
     Ok(())
 }
