@@ -17,8 +17,11 @@ This app is written in Rust with Python binding using Pyo3. See preview-file.py 
 
 The following Peaks.py does not has rust code, however it use a C++ file seek function, it can run very fast.
 
-Sample App:
+Sample App extracted from run.py of the above folder "py-peakrs":-
 ``
+## peakrs will be arranged for registering in Pypi
+import peakrs as pr
+
 ## 1000 means validating first row of 1000 partitions as given by the file_path
 csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000) 
 
