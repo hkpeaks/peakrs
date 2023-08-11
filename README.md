@@ -11,11 +11,11 @@ Peakrs will also be extended to cover realtime Web by Websocket.
 
 With the power of Python bindings, Peakrs can offer effective mean to support your machine learning exerciese interacting with Pytorch and Tensorflow.
 
-## The Folder "py-peakrs" is Python Running Rust Version of the Peaks
+## The Folder "py-peakrs" is a Rust app with Python bindings
 
-This app is written in Rust with Python binding using Pyo3. See preview-file.py for instruction.
+This app is written in Rust with Python binding using Pyo3. 
 
-See instruction in the file "run.py".
+Please refer to the instructions in the ‘run.py’ file. This file allows you to preview CSV files and their metadata instantly, even if the file size exceeds 10GB. Demo video: https://youtu.be/71GHzDnEYno
 
 ## New ETL Framework for File, In-memory Table and Network Stream
 
