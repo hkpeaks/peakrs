@@ -1,30 +1,35 @@
 # Peakrs Dataframe
 Peakrs Dataframe is a library and framework facilitates the extraction, transformation, and loading (ETL) of data. Its first application:-
 
-  ``import peakrs as pr``
+``import peakrs as pr``
   
-  ``pr.csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)``
+``pr.csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)``
 
 1000 represents number of sample row you want to get.
 
 It can verify whether a file is a comma-separated values (CSV) file and determine its delimiter other than comma. If the file passes validation, it can instantly preview a billion-row file. 
  
- `` pr.view_csv(csv_vector, csv_meta)``
+``pr.view_csv(csv_vector, csv_meta)``
 
 And you can output all validated rows to a disk file
 
-  ``pr.write_csv(csv_vector, csv_meta)``
+``pr.write_csv(csv_vector, csv_meta)``
 
 The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
 You can print the meta information.
 
-    print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")
-    print("  Total Column: ", format(csv_meta.total_column))
-    print("Validated Row: ", format(csv_meta.validate_row), end =" ")
-    print("  Estimated Row: ",format(csv_meta.estimate_row))
-    print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")
-    print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)
+``print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")``
+
+``print("  Total Column: ", format(csv_meta.total_column))``
+
+``print("Validated Row: ", format(csv_meta.validate_row), end =" ")``
+
+``print("  Estimated Row: ",format(csv_meta.estimate_row))``
+
+``print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")``
+
+``print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)``
 
 Like the Peaks Consolidation project https://github.com/hkpeaks/peaks-consolidation, you can easily configure complex and high-performance operations using a new ETL framework. The streaming engine takes care of allocating and distributing file partitions to the query engine, preventing your machine from running out of memory. This makes it simple to set up ETL processes and enjoy their benefits. In addtion, the design of the streaming engine can avoid generating many temp files which make your disk run out of disk space.
 
