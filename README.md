@@ -50,47 +50,47 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
    #### Double quote represents the syntax of the data transformation framework.
    #### Vector is table in vector format, meta_info is the meta_info of the vector and processing.
 
-   vector, meta_info = add_column(vector, meta_info, "column, column => math(new_col_name)") 
+   vector, meta_info = pr.add_column(vector, meta_info, "column, column => math(new_col_name)") 
    
         where math includes add, subtract, multiply & divide
     
-   vector, meta_info = build_keyvalue(vector, meta_info, "column, column ~ keyvalue_tablename")
+   vector, meta_info = pr.build_keyvalue(vector, meta_info, "column, column ~ keyvalue_tablename")
    
-   vector, meta_info = distinct(vector, meta_info, "column, column")
+   vector, meta_info = pr.distinct(vector, meta_info, "column, column")
  
-   vector, meta_info = filter(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
+   vector, meta_info = pr.filter(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
  
-   vector, meta_info = filter_unmatch(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
+   vector, meta_info = pr.filter_unmatch(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
 
         where compare operator includes >,<,>=,<=,=,!= & Range e.g. 100..200
               compare integer or float e.g. Float > number, float100..200
    
-   vector, meta_info = groupby(vector, meta_info, "column, column => count() sum(Column) max(Column) min(Column)")
+   vector, meta_info = pr.groupby(vector, meta_info, "column, column => count() sum(Column) max(Column) min(Column)")
    
-   vector, meta_info = join_keyvalue(vector, meta_info, "column, column => join_type(keyvalue_table_name)")
+   vector, meta_info = pr.join_keyvalue(vector, meta_info, "column, column => join_type(keyvalue_table_name)")
    
-   vector, meta_info = jointable(vector, meta_info, "column, Column => join_type(KeyValueTableName)")
+   vector, meta_info = pr.jointable(vector, meta_info, "column, Column => join_type(KeyValueTableName)")
 
         where join_type includes all_match & inner
    
-   vector, meta_info = orderBy(vector, meta_info,"primary_col(Sorting Order) secondary_col(sorting order)")       
+   vector, meta_info = pr.orderBy(vector, meta_info,"primary_col(Sorting Order) secondary_col(sorting order)")       
   
-   meta_info = orderBy{vector, meta_info, "secondaryCol(Sorting Order) => create_folder_lake(primary_col) ~ folder_name or file_name.csv"}
+   meta_info = pr.orderBy{vector, meta_info, "secondaryCol(Sorting Order) => create_folder_lake(primary_col) ~ folder_name or file_name.csv"}
 
         where sorting order represents by A or D, to sort real numbers, use either floatA or floatD
  
-   vector, meta_info = read_csv(file_path/file_name.csv)
+   vector, meta_info = pr.read_csv(file_path/file_name.csv)
    
-   vector, meta_info = select(vector, meta_info, "column, column")
+   vector, meta_info = pr.select(vector, meta_info, "column, column")
    
-   vector, meta_info = select_unmatch(vector, meta_info, "column, column")  
+   vector, meta_info = pr.select_unmatch(vector, meta_info, "column, column")  
    
-   meta_info = split_file{file_path/file_name.csv, number_of_split)
+   meta_info = pr.split_file{file_path/file_name.csv, number_of_split)
    
-   meta_info = create_folder_lake(vector, meta_info, "column, column => split_folder_name")
+   meta_info = pr.create_folder_lake(vector, meta_info, "column, column => split_folder_name")
    
-   meta_info = view(vector, meta_info)
+   meta_info = pr.view(vector, meta_info)
 
-   meta_info = write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv} 
+   meta_info = pr.write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv} 
 
 
