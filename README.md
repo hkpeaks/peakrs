@@ -32,6 +32,7 @@ csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)
 if len(csv_meta.error_message) > 0:
     print(csv_meta.error_message)
 else: 
+
     ** Print first 20 sample rows to screen **
     pr.view_csv(csv_vector, csv_meta)
 
