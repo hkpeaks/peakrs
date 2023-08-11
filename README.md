@@ -47,7 +47,8 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
 
 ## Command List
 
-   #### Double quote represents the syntax of the data transformation framework 
+   #### Double quote represents the syntax of the data transformation framework.
+   #### Vector is table in vector format, meta_info is the meta_info of the vector and processing.
 
    vector, meta_info = add_column(vector, meta_info, "column, column => math(new_col_name)") 
    
