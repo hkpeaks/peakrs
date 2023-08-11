@@ -1,4 +1,7 @@
 # Peakrs Dataframe
+
+### Dataframe = Vector + Meta Information
+
 Peakrs Dataframe is a library and framework facilitates the extraction, transformation, and loading (ETL) of data. Its first application:-
 
 ``import peakrs as pr``
