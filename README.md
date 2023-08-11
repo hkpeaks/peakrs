@@ -17,18 +17,42 @@ This app is written in Rust with Python binding using Pyo3. See preview-file.py 
 
 The following Peaks.py does not has rust code, however it use a C++ file seek function, it can run very fast.
 
-## The File "preview.py" is Python Code Running Native C++ API
-This app is uploaded in this repository and used to validate and preview CSV files. For every 1% position of a CSV file, it will extract one row for validation and preview. On the screen, it will display 20 rows but will output all validated rows to a disk file. If you have any issues with this app, please leave your message at    https://github.com/hkpeaks/pypeaks/issues. 
+Sample App:
+``
+## 1000 means validating first row of 1000 partitions as given by the file_path
+csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000) 
 
-The app will gradually expand to become an ETL Framework for Polars (and/or Pandas, DuckDB, NumPy) with the implementation of the newly designed SQL statements. The ETL script will be compatible with the Peaks Consolidation https://github.com/hkpeaks/peaks-consolidation, meaning you can run the script using Python with Polars or purely using the Peaks runtime without Python.
-    
-    How to use this app:
+if len(csv_meta.error_message) > 0:
+    print(csv_meta.error_message)
+else: 
+    ## Print first 20 sample rows to screen
+    pr.view_csv(csv_vector, csv_meta)
 
-    Python preview-file.py File or File Path
+    ## Print all validated rows to a disk file "%Sample.csv"
+    pr.write_csv(csv_vector, csv_meta)
 
-    e.g. python preview-file data.csv
+    ## Print validation summary to screen
+    print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")
+    print("  Total Column: ", format(csv_meta.total_column))
+    print("Validated Row: ", format(csv_meta.validate_row), end =" ")
+    print("  Estimated Row: ",format(csv_meta.estimate_row))
 
-         python preview-file "d:\your folder\data.csv"
+    print("Column Name: ", end =" ")
+
+    for i in range(len(csv_meta.column_name)):
+        if i < len(csv_meta.column_name) - 1:
+            print(csv_meta.column_name[i], end=",")
+        else:
+            print(csv_meta.column_name[i])
+
+    if csv_meta.delimiter == 0:
+        print("Delimiter: ")
+    else:              
+        print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")
+
+    print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)
+
+    ``
 
 ## New ETL Framework for File, In-memory Table and Network Stream
 
