@@ -28,7 +28,7 @@ import sys
 import peakrs as pr
 
 ## This simple function is not suitable migrating to Rust
-def number_display_format(num: float) -> str:
+def format(num: float) -> str:
     
     num_str = f'{num:.16g}'
     parts = num_str.split('.')
@@ -45,43 +45,42 @@ if __name__ == "__main__":
    start = time()
 
 if len(sys.argv) == 1: ## Input 0 para after Python Preview_file.py
-    file_path = "Data.csv" ## default value
+    file_path = "Mushroom.csv" ## default value
 elif len(sys.argv) == 2: ## Input 1 para "file_name.csv" after Python Preview_file.py
     file_path = sys.argv[1]    
 
-## 1000 means validating of first row of 1000 partitions as given by the file_path
-csv_info, validate_byte, error_message = pr.get_csv_info(file_path, 1000) 
+## 1000 means validating first row of 1000 partitions as given by the file_path
+csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000) 
 
-if len(error_message) > 0:
-    print(error_message)
-else:
-
+if len(csv_meta.error_message) > 0:
+    print(csv_meta.error_message)
+else: 
     ## Print first 20 sample rows to screen
-    pr.view(bytes(validate_byte), csv_info)
+    pr.view_csv(csv_vector, csv_meta)
 
     ## Print all validated rows to a disk file "%Sample.csv"
-    pr.write_csv_sample_file(bytes(validate_byte), csv_info)
+    pr.write_csv(csv_vector, csv_meta)
 
     ## Print validation summary to screen
-    print("File Size: " + number_display_format(float(csv_info.file_size)) + " bytes", end =" ")
-    print("  Total Column: ", number_display_format(float(csv_info.total_column)))
-    print("Validated Row: ", number_display_format(float(csv_info.validate_row)), end =" ")
-    print("  Estimated Row: ", number_display_format(float(csv_info.estimate_row)))
+    print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")
+    print("  Total Column: ", format(csv_meta.total_column))
+    print("Validated Row: ", format(csv_meta.validate_row), end =" ")
+    print("  Estimated Row: ",format(csv_meta.estimate_row))
 
     print("Column Name: ", end =" ")
 
-    for i in range(len(csv_info.column_name)):
-        if i < len(csv_info.column_name) - 1:
-            print(csv_info.column_name[i], end=",")
+    for i in range(len(csv_meta.column_name)):
+        if i < len(csv_meta.column_name) - 1:
+            print(csv_meta.column_name[i], end=",")
         else:
-            print(csv_info.column_name[i])
+            print(csv_meta.column_name[i])
 
-    if csv_info.delimiter == 0:
+    if csv_meta.delimiter == 0:
         print("Delimiter: ")
     else:              
-        print("Delimiter: " + number_display_format(float(csv_info.delimiter)) + " [" + chr(csv_info.delimiter) + "]")
+        print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")
 
-    print("Is Line Br 10/13 Exist: ", csv_info.is_line_br_10_exist, "/", csv_info.is_line_br_13_exist)
+    print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)
 
 end = time()
 
