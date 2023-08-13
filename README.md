@@ -28,7 +28,7 @@ You can print the meta information.
 
 ``print("  Estimated Row: ",format(df.estimate_row))``
 
-``print("Delimiter: " + format(df.delimiter) + " [" + chr(csv_meta.delimiter) + "]")``
+``print("Delimiter: " + format(df.delimiter) + " [" + chr(df.delimiter) + "]")``
 
 ``print("Is Line Br 10/13 Exist: ", df.is_line_br_10_exist, "/", df.is_line_br_13_exist)``
 
