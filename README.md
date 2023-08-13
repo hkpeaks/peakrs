@@ -51,49 +51,49 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
 ## Command List
 
    #### Double quote represents the syntax of the data transformation framework.
-   #### Vector is table in vector format, meta_info is the meta_info of the vector and processing.
+   #### df represents dataframe, you can use alternative name
 
-   vector, meta_info = pr.add_column(vector, meta_info, "column, column => math(new_col_name)") 
+   df = pr.add_column(df, "column, column => math(new_col_name)") 
    
         where math includes add, subtract, multiply and divide
     
-   vector, meta_info = pr.build_keyvalue(vector, meta_info, "column, column => keyvalue_tablename")
+   df = pr.build_keyvalue(df, "column, column => keyvalue_tablename")
    
-   vector, meta_info = pr.distinct(vector, meta_info, "column, column")
+   df = pr.distinct(df, "column, column")
  
-   vector, meta_info = pr.filter(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
+   df = pr.filter(df, "column(compare_operator value) column(compare_operator value)")
  
-   vector, meta_info = pr.filter_unmatch(vector, meta_info, "column(compare_operator value) column(compare_operator value)")
+   df = pr.filter_unmatch(df, "column(compare_operator value) column(compare_operator value)")
 
         where compare_operator includes >,<,>=,<=,=,!= & Range e.g. 100..200
               compare integer or float e.g. Float > number, float100..200
    
-   vector, meta_info = pr.groupby(vector, meta_info, "column, column => count() sum(column) max(column) min(column)")
+   df = pr.groupby(df, "column, column => count() sum(column) max(column) min(column)")
    
-   vector, meta_info = pr.join_keyvalue(vector, meta_info, "column, column => join_type(keyvalue_table_name)")
+   df = pr.join_keyvalue(df, "column, column => join_type(keyvalue_table_name)")
    
-   vector, meta_info = pr.jointable(vector, meta_info, "column, column => join_type(keyvalue_table_name)")
+   df = pr.jointable(df, "column, column => join_type(keyvalue_table_name)")
 
         where join_type includes all_match & inner
    
-   vector, meta_info = pr.orderby(vector, meta_info,"primary_col(sorting order) secondary_col(sorting order)")       
+   df = pr.orderby(df,"primary_col(sorting order) secondary_col(sorting order)")       
   
-   meta_info = pr.orderby{vector, meta_info, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv))
+   df = pr.orderby{df, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv))
 
         where sorting order represents by A or D, to sort real numbers, use either floatA or floatD
  
-   vector, meta_info = pr.read_csv(file_path or file_name.csv)
+   df = pr.read_csv(file_path or file_name.csv)
    
-   vector, meta_info = pr.select(vector, meta_info, "column, column")
+   df = pr.select(df, "column, column")
    
-   vector, meta_info = pr.select_unmatch(vector, meta_info, "column, column")  
+   df = pr.select_unmatch(df, "column, column")  
    
-   meta_info = pr.split_file(file_path or file_name.csv, number_of_split)
+   df = pr.split_file(file_path or file_name.csv, number_of_split)
    
-   meta_info = pr.create_folder_lake(vector, meta_info, "column, column => split_folder_name")
+   df = pr.create_folder_lake(df, "column, column => split_folder_name")
    
-   meta_info = pr.view(vector, meta_info)
+   df = pr.view(df)
 
-   meta_info = pr.write_csv(vector, meta_info, file_name.csv or %expand_by_100_time.csv) 
+   df = pr.write_csv(df, file_name.csv or %expand_by_100_time.csv) 
 
 
