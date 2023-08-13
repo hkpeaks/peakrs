@@ -12,25 +12,25 @@ Peakrs Dataframe is a library and framework facilitates the extraction, transfor
 
 It can verify whether a file is a comma-separated values (CSV) file and determine its delimiter other than comma. If the file passes validation, it can instantly preview a billion-row file. 
  
-``pr.view_csv(csv_vector, csv_meta)``
+``pr.view_csv(df)``
 
 And you can output all validated rows to a disk file
 
-``pr.write_csv(csv_vector, csv_meta)``
+``df = pr.write_csv(df)``
 
 You can print the meta information.
 
-``print("File Size: " + format(csv_meta.file_size) + " bytes", end =" ")``
+``print("File Size: " + format(df.file_size) + " bytes", end =" ")``
 
-``print("  Total Column: ", format(csv_meta.total_column))``
+``print("  Total Column: ", format(df.total_column))``
 
-``print("Validated Row: ", format(csv_meta.validate_row), end =" ")``
+``print("Validated Row: ", format(df.validate_row), end =" ")``
 
-``print("  Estimated Row: ",format(csv_meta.estimate_row))``
+``print("  Estimated Row: ",format(df.estimate_row))``
 
-``print("Delimiter: " + format(csv_meta.delimiter) + " [" + chr(csv_meta.delimiter) + "]")``
+``print("Delimiter: " + format(df.delimiter) + " [" + chr(csv_meta.delimiter) + "]")``
 
-``print("Is Line Br 10/13 Exist: ", csv_meta.is_line_br_10_exist, "/", csv_meta.is_line_br_13_exist)``
+``print("Is Line Br 10/13 Exist: ", df.is_line_br_10_exist, "/", df.is_line_br_13_exist)``
 
 Like the Peaks Consolidation project https://github.com/hkpeaks/peaks-consolidation, you can easily configure complex and high-performance operations using a new ETL framework for data transformation. The streaming engine takes care of allocating and distributing file partitions to the query engine, preventing your machine from running out of memory. This makes it simple to set up ETL processes and enjoy their benefits. In addtion, the design of the streaming engine can avoid generating many temp files which make your disk run out of disk space.
 
@@ -92,7 +92,7 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
    
    df = pr.create_folder_lake(df, "column, column => split_folder_name")
    
-   df = pr.view(df)
+   pr.view(df)
 
    df = pr.write_csv(df, file_name.csv or %expand_by_100_time.csv) 
 
