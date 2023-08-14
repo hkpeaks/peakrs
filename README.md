@@ -78,7 +78,7 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
    
    df = pr.orderby(df,"primary_col(sorting order) secondary_col(sorting order)")       
   
-   df = pr.orderby{df, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv))
+   df = pr.orderby{df, "secondaryCol(sorting order) => create_folder_lake(primary_col,folder_name or file_name.csv)")
 
         where sorting order represents by A or D, to sort real numbers, use either floatA or floatD
  
