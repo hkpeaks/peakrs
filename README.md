@@ -6,7 +6,7 @@ Peakrs Dataframe is a library and framework facilitates the extraction, transfor
 
 ``import peakrs as pr``
   
-``pr.csv_vector, csv_meta = pr.get_csv_sample(file_path, 1000)``
+``df = pr.get_csv_sample(file_path, 1000)``
 
 1,000 represents number of sample row you want to get. The file can be split into 1,000 or more partitions to extract and validate the first row of each partition. In many cases, the entire process of this application runs instantly, regardless of whether the file size exceeds 10GB or contains billions of rows.
 
