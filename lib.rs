@@ -1,6 +1,4 @@
 use pyo3::prelude::*;
-//use chrono::{DateTime, Utc};
-//use pyo3::types::PyDateTime;
 extern crate rayon;
 extern crate regex;
 use std::fs::{File, metadata};
@@ -57,18 +55,7 @@ pub struct Dataframe {
     pub value_column_name: Vec<String>,
     pub vector_table: Vec<u8>,
     pub vector_table_group: HashMap<usize, Vec<u8>>,
-}
-/*
-use chrono::{DateTime, Duration, Utc};
-use std::time::{Instant, SystemTime};
-
-let instant = Instant::now();
-let system_time = SystemTime::now();
-let datetime = DateTime::<Utc>::from(system_time);
-let duration = instant.duration_since(SystemTime::UNIX_EPOCH).expect("Time went backwards");
-let datetime_from_instant = datetime + Duration::from_std(duration).unwrap();
-*/
- 
+} 
  
 #[pymethods]
 impl Dataframe {
