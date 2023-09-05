@@ -8,7 +8,6 @@ use rayon::prelude::*;
 use std::collections::HashMap;
 use std::sync::Mutex;
 use std::time::Instant;
-//use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::{Read, Seek, SeekFrom};
 use regex::Regex;
