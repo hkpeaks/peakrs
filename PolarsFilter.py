@@ -14,7 +14,7 @@ df = pl.scan_csv(file_path)
 df = df.filter((pl.col('Shop') >= "S20") & (pl.col('Shop') <= "S50"))
 df = df.filter((pl.col('Product') >= 500) & (pl.col('Product') <= 800))
 
-output_file_path = f"PolarsResult-{Path(file_path).name}"
+output_file_path = f"PolarsFilterResult-{Path(file_path).name}"
 df.sink_csv(output_file_path)
 
 e = time.time()

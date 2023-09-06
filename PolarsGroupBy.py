@@ -20,7 +20,7 @@ df = df.group_by(["Shop", "Product"]).agg([
         pl.sum('Base_Amount').alias('Base_Amount(Sum)'),        
     ])
 
-output_file_path = f"PeakrsResult-{Path(file_path).name}"
+output_file_path = f"PolarsGroupByResult-{Path(file_path).name}"
 df.sink_csv(output_file_path)
 
 e = time.time()
