@@ -46,7 +46,7 @@ def group_by(ref_df: pr.Dataframe, source_file_path: str) -> pr.Dataframe:
         if ref_df.partition_count - ref_df.processed_partition < ref_df.thread:
             ref_df.thread = ref_df.partition_count - ref_df.processed_partition
 
-        df = pr.read_csv(ref_df, ref_df.thread, source_file_path)
+        df = pr.read_csv(ref_df, source_file_path)
         df = pr.filter(df,"Shop(S20..S50)Product(500..800)")               
         df = pr.group_by(df, "Shop, Product => Count() Sum(Quantity) Sum(Base_Amount)")
 
