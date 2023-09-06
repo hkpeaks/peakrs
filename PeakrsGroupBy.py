@@ -26,15 +26,15 @@ from time import time
 import sys
 import os
 from datetime import datetime
-from pathlib import Path
 import peakrs as pr
 
-def filter(ref_df: pr.Dataframe, source_file_path: str):
+def group_by(ref_df: pr.Dataframe, source_file_path: str) -> pr.Dataframe:    
     
     ref_df = pr.get_csv_partition_address(ref_df, source_file_path)
    
     print("\nPartition Count: ", ref_df.partition_count)
-  
+
+    final_df_group = {}
     ref_df.processed_partition = 0
     ref_df.streaming_batch = 0
 
@@ -47,15 +47,17 @@ def filter(ref_df: pr.Dataframe, source_file_path: str):
             ref_df.thread = ref_df.partition_count - ref_df.processed_partition
 
         df = pr.read_csv(ref_df, ref_df.thread, source_file_path)
-        df = pr.filter(df,"Shop(S20..S50)")                      
-        df = pr.filter(df,"Product(500..800)")     
+        df = pr.filter(df,"Shop(S20..S50)Product(500..800)")               
+        df = pr.group_by(df, "Shop, Product => Count() Sum(Quantity) Sum(Base_Amount)")
 
-        pr.append_csv(df, result_file_path)
-        
+        final_df_group[ref_df.streaming_batch] = df
         ref_df.processed_partition += ref_df.thread
         ref_df.streaming_batch += 1
         print(f"{ref_df.processed_partition} ", end="")
         sys.stdout.flush()       
+
+    result_df = pr.final_group_by(final_df_group,"Shop, Product => Sum(Count) Sum(Quantity) Sum(Base_Amount)")
+    return result_df
 
    
 start_time = datetime.now()
@@ -72,16 +74,13 @@ pr.view_sample(source_file_path)
 df.partition_size_mb = 10
 df.thread = 20
 
-result_file_path = f"ResultFilter-{os.path.basename(source_file_path)}"
+df = group_by(df, source_file_path)
 
-try:
-    file = open(result_file_path, "w")
-except:
-    print("Fail to create file")
+result_file_path = f"ResultGroupBy-{os.path.basename(source_file_path)}"
 
-df = filter(df, source_file_path)
-
+pr.write_csv(df, result_file_path)
+print()
 pr.view_sample(result_file_path)
 
 elapsed = datetime.now() - start_time
-print(f"\nPeakrs Filter Duration (in second): {elapsed.total_seconds():.3f}")
+print(f"\nPeakrs Group_By Duration (in second): {elapsed.total_seconds():.3f}")
