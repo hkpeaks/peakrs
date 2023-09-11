@@ -36,22 +36,16 @@ def group_by(ref_df: pr.Dataframe, source_file_path: str) -> pr.Dataframe:
 
     final_df_group = {}
     ref_df.processed_partition = 0
-    ref_df.streaming_batch = 0
-
-    if ref_df.thread < 2:
-        ref_df.thread = 10  
+    ref_df.streaming_batch = 0   
 
     while ref_df.processed_partition < ref_df.partition_count:
-        
-        if ref_df.partition_count - ref_df.processed_partition < ref_df.thread:
-            ref_df.thread = ref_df.partition_count - ref_df.processed_partition
 
-        df = pr.read_csv(ref_df, source_file_path)
-        df = pr.filter(df,"Shop(S20..S50)Product(500..800)")               
+        df = pr.read_csv(ref_df, source_file_path)     
+        df = pr.filter(df,"Shop(S11..S89)Product(105..899)")               
         df = pr.group_by(df, "Shop, Product => Count() Sum(Quantity) Sum(Base_Amount)")
 
         final_df_group[ref_df.streaming_batch] = df
-        ref_df.processed_partition += ref_df.thread
+        ref_df.processed_partition += df.thread
         ref_df.streaming_batch += 1
         print(f"{ref_df.processed_partition} ", end="")
         sys.stdout.flush()       
@@ -62,21 +56,33 @@ def group_by(ref_df: pr.Dataframe, source_file_path: str) -> pr.Dataframe:
    
 start_time = datetime.now()
 df = pr.Dataframe()
-df.log_file_name = "Log-" + datetime.now().strftime("%y%m%d-%H%M%S") + ".csv"
+df.log_file_name = "Outbox/Log-" + datetime.now().strftime("%y%m%d-%H%M%S") + ".csv"
 pr.create_log(df)
+"""
+if len(sys.argv) == 1:
+    source_file_path = "Inbox/10-MillionRows.csv" ## default value
+elif len(sys.argv) == 2:
+    source_file_path = "Inbox/" + sys.argv[1] ## input file name in CLI """
 
 if len(sys.argv) == 1:
-    source_file_path = "10-MillionRows.csv" ## default value
+    source_file_path = os.path.join("Inbox", "10-MillionRows.csv") ## default value
 elif len(sys.argv) == 2:
-    source_file_path = sys.argv[1] ## input file name in CLI 
+    if os.path.exists(sys.argv[1]):
+        source_file_path = sys.argv[1] ## input file name in CLI
+    elif os.path.exists(os.path.join("Inbox", sys.argv[1])):
+        source_file_path = os.path.join("Inbox", sys.argv[1])
+    else:
+        print(f"File {sys.argv[1]} not found in current directory or Inbox.")
+
 
 pr.view_sample(source_file_path)
 df.partition_size_mb = 10
-df.thread = 20
+df.thread = 100
 
 df = group_by(df, source_file_path)
 
-result_file_path = f"ResultGroupBy-{os.path.basename(source_file_path)}"
+result_file = f"ResultGroupBy-{os.path.basename(source_file_path)}"
+result_file_path = "Outbox/" + result_file
 
 pr.write_csv(df, result_file_path)
 print()

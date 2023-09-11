@@ -29,20 +29,24 @@ from datetime import datetime
 from pathlib import Path
 import peakrs as pr
 
-def filter(ref_df: pr.Dataframe, source_file_path: str):
+def join_table(ref_df: pr.Dataframe, source_file_path: str, result_file_path: str):
+    
+    ref_df = pr.get_csv_partition_address(ref_df, "Inbox/Master.csv")  
+    master_df = pr.read_csv(ref_df, "Inbox/Master.csv")
+    master_df = pr.filter(master_df,"Product(200..220)")                      
+    master_df = pr.build_key_value(master_df, "Product, Style => Table(KeyValue)")
     
     ref_df = pr.get_csv_partition_address(ref_df, source_file_path)
-   
     print("\nPartition Count: ", ref_df.partition_count)
-  
     ref_df.processed_partition = 0
-    ref_df.streaming_batch = 0
+    ref_df.streaming_batch = 0   
 
-    while ref_df.processed_partition < ref_df.partition_count:
-
+    while ref_df.processed_partition < ref_df.partition_count:        
+       
         df = pr.read_csv(ref_df, source_file_path)
-        df = pr.filter(df,"Shop(S20..S50)")                      
-        df = pr.filter(df,"Product(500..800)")     
+        df = pr.filter(df,"Shop(S11..S89)Product(105..899)")                      
+        df = pr.join_key_value(df, master_df, "Product, Style => Inner(KeyValue)")    
+        df = pr.add_column(df, "Quantity, Unit_Price => Multiply(Amount)")
 
         pr.append_csv(df, result_file_path)
         
@@ -71,7 +75,7 @@ pr.view_sample(source_file_path)
 df.partition_size_mb = 10
 df.thread = 100
 
-result_file = f"ResultFilter-{os.path.basename(source_file_path)}"
+result_file = f"ResultJointable-{os.path.basename(source_file_path)}"
 result_file_path = "Outbox/" + result_file
 
 try:
@@ -79,9 +83,9 @@ try:
 except:
     print("Fail to create file")
 
-df = filter(df, source_file_path)
+join_table(df, source_file_path, result_file_path)
 
 pr.view_sample(result_file_path)
 
 elapsed = datetime.now() - start_time
-print(f"\nPeakrs Filter Duration (in second): {elapsed.total_seconds():.3f}")
+print(f"\nPeakrs InnerJoin Duration (in second): {elapsed.total_seconds():.3f}")
