@@ -94,4 +94,14 @@ Please refer to the instructions in the ‘run.py’ file. This file allows you 
 
    df = pr.write_csv(df, file_name.csv or %expand_by_100_time.csv) 
 
+   ```mermaid
+barChart
+title Key: Bar Chart
+"Bar 1" : 1000
+"Bar 2" : 1200
+"Bar 3" : 500
+"Bar 4" : 800
+"Bar 5" : 400
+
+
 
